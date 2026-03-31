@@ -7,11 +7,21 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
 
 <style>
-body {
+/* 全体の高さを確保 */
+html, body {
+    height: 100%;
     margin: 0;
-font-family: sans-serif;
+    font-family: sans-serif;
 }
 
+/* ラッパーでFlexboxレイアウト */
+.wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ヘッダー */
 header {
     background: black;
     color: white;
@@ -28,40 +38,100 @@ ul {
     margin: 0;
     padding: 0;
 }
+
 a {
-      color: white;
-      text-decoration: none;
-}
-a:hover {
-        background: gray;
-        border-radius: 5px;     
-}
-h1 {
-      margin: 0;
-}
-li {
+    color: white;
+    text-decoration: none;
     padding: 5px 10px;
+    border-radius: 5px;
 }
 
+/* 現在ページのリンクを強調 */
+a.active {
+    background: gray;
+    font-weight: bold;
+}
+
+a:hover {
+    background: gray;   
+}
+
+h1 {
+    margin: 0;
+}
+
+/* メイン部分 */
+main {
+    flex: 1; /* 余白を埋める */
+    padding: 20px;
+}
+
+p {
+    font-size: x-large;
+}
+
+/* 太字管理人コメント */
+b {
+    display: block;
+    margin-top: 20px;
+    line-height: 1.5;
+}
+
+/* フッター */
+footer {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
 </style>
 
 </head>
 
 <body>
-    <header>
-        <h1>プロトタイプ</h1>
+    <div class="wrapper">
+        <header>
+            <h1>プロトタイプ</h1>
+            <ul>
+                <li><a href="index.html">ホーム</a></li>
+                <li><a href="board.html">板一覧</a></li>
+                <li><a href="thread.html">スレッド</a></li>
+                <li><a href="blog.html">ブログ</a></li>
+                <li><a href="Contact.html">連絡</a></li>
+            </ul>
+        </header>
 
-        <ul>
-            <li><a href="/">ホーム</a></li>
-            <li><a href="/board">板一覧</a></li>
-            <li><a href="/thread">スレッド</a></li>
-            <li><a href="/blog">ブログ</a></li>
-        </ul>
-    </header>
+        <main>
+            <p>ようこそ</p>
 
-    <main>
-        <p>ようこそ</p>
-    </main>
+            <b>
+            こんにちは管理人です。<br>
+            利用規約<br>
+            1. この掲示板に書き込まれた文は全て管理者の権利として扱われる。<br>
+            2. この掲示板は完全匿名だが、犯罪予告もしくは中傷、取引に該当する発言が発見された場合消す場合がある事。<br>
+            3. 2を守ればなんでもしていい。<br>
+            4. 不満や意見があればお気軽に連絡してください
+            </b>
+        </main>
+
+        <footer>
+            <p>© 2026 プロトタイプ</p>
+        </footer>
+    </div>
+
+<script>
+// 現在のページに応じてナビリンクを強調
+document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll("header ul li a");
+    const currentPage = location.pathname.split("/").pop(); // ファイル名だけ取得
+
+    links.forEach(link => {
+        if (link.getAttribute("href") === currentPage) {
+            link.classList.add("active");
+        }
+    });
+});
+</script>
+
 </body>
-
 </html>
