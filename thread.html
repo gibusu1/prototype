@@ -1,0 +1,103 @@
+doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>スレッド一覧 - プロトタイプ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body, html { margin:0; padding:0; font-family:sans-serif; }
+.wrapper { min-height:100%; display:flex; flex-direction:column; }
+header{display:flex; justify-content:space-between; align-items:center; background:black; color:white; padding:10px;}
+header h1{font-size:1.2rem; margin:0;}
+.menu-toggle{font-size:1.5rem; cursor:pointer;}
+nav ul{display:none; flex-direction:column; list-style:none; padding:0; margin:0;}
+nav ul li a{color:white;text-decoration:none;padding:10px; display:block; border-radius:5px;}
+nav ul li a:hover{background:#444;}
+@media(min-width:600px){.menu-toggle{display:none;}nav ul{display:flex !important; flex-direction:row; gap:15px;}}
+
+main{padding:20px; flex:1;}
+#thread-form{margin-bottom:20px; display:flex; flex-direction:column; gap:10px;}
+#thread-form input{padding:8px; font-size:1rem;}
+#thread-form button{padding:8px; cursor:pointer;}
+ul.thread-list{list-style:none; padding:0;}
+ul.thread-list li{padding:8px; border-bottom:1px solid #ccc;}
+ul.thread-list li a{text-decoration:none; color:blue; display:block;}
+ul.thread-list li a:hover{text-decoration:underline;}
+footer{background:black; color:white; text-align:center; padding:10px 0; font-size:0.9rem;}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<header>
+<h1>プロトタイプ</h1>
+<span class="menu-toggle">&#9776;</span>
+<nav>
+  <ul>
+    <li><a href="index.html">ホーム</a></li>
+    <li><a href="board.html">板一覧</a></li>
+    <li><a href="thread.html">スレッド</a></li>
+    <li><a href="blog.html">ブログ</a></li>
+    <li><a href="Contact.html">連絡</a></li>
+  </ul>
+</nav>
+</header>
+
+<main>
+<h2 id="board-title">板名</h2>
+
+<form id="thread-form">
+  <input type="text" id="thread-title-input" placeholder="新しいスレッド名">
+  <button type="submit">作成</button>
+</form>
+
+<ul class="thread-list" id="thread-list"></ul>
+</main>
+
+<footer>© 2026 プロトタイプ</footer>
+</div>
+
+<script>
+// ハンバーガー
+document.addEventListener("DOMContentLoaded",()=>{
+  const toggle = document.querySelector(".menu-toggle");
+  const navUL = document.querySelector("nav ul");
+  toggle.addEventListener("click",()=>{navUL.style.display=(navUL.style.display==="block")?"none":"block";});
+
+  // URLパラメータ
+  const params = new URLSearchParams(window.location.search);
+  const board = params.get("board")||"一般";
+  document.getElementById("board-title").textContent=board+"板のスレッド一覧";
+
+  const getThreads = b=>JSON.parse(localStorage.getItem("threads_"+b)||"[]");
+  const saveThreads = (b,t)=>localStorage.setItem("threads_"+b,JSON.stringify(t));
+
+  const threadList=document.getElementById("thread-list");
+  function renderThreads(){
+    threadList.innerHTML="";
+    getThreads(board).forEach(title=>{
+      const li=document.createElement("li");
+      const a=document.createElement("a");
+      a.href="thread-detail.html?board="+encodeURIComponent(board)+"&thread="+encodeURIComponent(title);
+      a.textContent=title;
+      li.appendChild(a);
+      threadList.appendChild(li);
+    });
+  }
+  renderThreads();
+
+  // 新規スレッド作成
+  document.getElementById("thread-form").addEventListener("submit",e=>{
+    e.preventDefault();
+    const input=document.getElementById("thread-title-input");
+    const title=input.value.trim();
+    if(!title) return;
+    const threads=getThreads(board);
+    threads.push(title);
+    saveThreads(board,threads);
+    renderThreads();
+    input.value="";
+  });
+});
+</script>
+</body>
+</html>
