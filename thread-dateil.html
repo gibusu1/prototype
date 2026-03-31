@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>スレッド詳細 - プロトタイプ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body, html { margin:0; padding:0; font-family:sans-serif; }
+.wrapper { min-height:100%; display:flex; flex-direction:column; }
+header{display:flex; justify-content:space-between; align-items:center; background:black; color:white; padding:10px;}
+header h1{font-size:1.2rem; margin:0;}
+.menu-toggle{font-size:1.5rem; cursor:pointer;}
+nav ul{display:none; flex-direction:column; list-style:none; padding:0; margin:0;}
+nav ul li a{color:white;text-decoration:none;padding:10px; display:block; border-radius:5px;}
+nav ul li a:hover{background:#444;}
+@media(min-width:600px){.menu-toggle{display:none;}nav ul{display:flex !important; flex-direction:row; gap:15px;}}
+
+main{padding:20px; flex:1;}
+ul.reply-list{list-style:none; padding:0;}
+ul.reply-list li{padding:8px; border-bottom:1px solid #ccc;}
+form{margin-top:20px; display:flex; flex-direction:column; gap:10px;}
+textarea{resize:vertical; min-height:80px; padding:5px; font-size:1rem;}
+button{padding:5px 10px; cursor:pointer;}
+footer{background:black; color:white; text-align:center; padding:10px 0; font-size:0.9rem;}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<header>
+<h1>プロトタイプ</h1>
+<span class="menu-toggle">&#9776;</span>
+<nav>
+  <ul>
+    <li><a href="index.html">ホーム</a></li>
+    <li><a href="board.html">板一覧</a></li>
+    <li><a href="thread.html">スレッド</a></li>
+    <li><a href="blog.html">ブログ</a></li>
+    <li><a href="Contact.html">連絡</a></li>
+  </ul>
+</nav>
+</header>
+
+<main>
+<h2 id="thread-title">スレッドタイトル</h2>
+<ul class="reply-list" id="reply-list"></ul>
+
+<form id="reply-form">
+  <textarea id="reply-text" placeholder="ここにレスを書いてください"></textarea>
+  <button type="submit">投稿</button>
+</form>
+</main>
+
+<footer>© 2026 プロトタイプ</footer>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const toggle = document.querySelector(".menu-toggle");
+  const navUL = document.querySelector("nav ul");
+  toggle.addEventListener("click",()=>{navUL.style.display=(navUL.style.display==="block")?"none":"block";});
+
+  // URLパラメータ
+  const params = new URLSearchParams(window.location.search);
+  const board = params.get("board")||"一般";
+  const thread = params.get("thread")||"未設定スレッド";
+  document.getElementById("thread-title").textContent = board + "板 > " + thread;
+
+  const storageKey = "replies_" + board + "_" + thread;
+  const getReplies = ()=>JSON.parse(localStorage.getItem(storageKey)||"[]");
+  const saveReplies = r=>localStorage.setItem(storageKey,JSON.stringify(r));
+
+  const replyList=document.getElementById("reply-list");
+  function renderReplies(){ replyList.innerHTML=""; getReplies().forEach(t=>{ const li=document.createElement("li"); li.textContent=t; replyList.appendChild(li); }); }
+  renderReplies();
+
+  // レス投稿
+  document.getElementById("reply-form").addEventListener("submit",e=>{
+    e.preventDefault();
+    const text=document.getElementById("reply-text").value.trim();
+    if(!text) return;
+    const replies=getReplies();
+    replies.push(text);
+    saveReplies(replies);
+    renderReplies();
+    document.getElementById("reply-text").value="";
+  });
+});
+</script>
+</body>
+</html>
