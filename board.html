@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>板一覧 - プロトタイプ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body, html { margin:0; padding:0; font-family:sans-serif; }
+.wrapper { min-height:100%; display:flex; flex-direction:column; }
+
+/* ヘッダー */
+header { display:flex; justify-content:space-between; align-items:center; background:black; color:white; padding:10px; }
+header h1 { font-size:1.2rem; margin:0; }
+.menu-toggle { font-size:1.5rem; cursor:pointer; }
+nav ul { display:none; flex-direction:column; list-style:none; padding:0; margin:0; }
+nav ul li a { color:white; text-decoration:none; padding:10px; display:block; border-radius:5px; }
+nav ul li a:hover { background:#444; }
+
+/* PC表示 */
+@media(min-width:600px){
+  .menu-toggle{display:none;}
+  nav ul{display:flex !important; flex-direction:row; gap:15px;}
+}
+
+/* 本文 */
+main { padding:20px; flex:1; }
+ul.board-list { list-style:none; padding:0; }
+ul.board-list li { margin:10px 0; }
+ul.board-list li a { text-decoration:none; color:blue; font-size:1.1rem; }
+ul.board-list li a:hover { text-decoration:underline; }
+
+/* フッター */
+footer { background:black; color:white; text-align:center; padding:10px 0; font-size:0.9rem; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+<header>
+<h1>プロトタイプ</h1>
+<span class="menu-toggle">&#9776;</span>
+<nav>
+  <ul>
+    <li><a href="index.html">ホーム</a></li>
+    <li><a href="board.html">板一覧</a></li>
+    <li><a href="thread.html">スレッド</a></li>
+    <li><a href="blog.html">ブログ</a></li>
+    <li><a href="Contact.html">連絡</a></li>
+  </ul>
+</nav>
+</header>
+
+<main>
+<h2>板一覧</h2>
+<ul class="board-list">
+  <li><a href="thread.html?board=一般">一般板</a></li>
+  <li><a href="thread.html?board=アニメ">アニメ板</a></li>
+  <li><a href="thread.html?board=ゲーム">ゲーム板</a></li>
+  <li><a href="thread.html?board=音楽">音楽板</a></li>
+  <li><a href="thread.html?board=テクノロジー">テクノロジー板</a></li>
+</ul>
+</main>
+
+<footer>© 2026 プロトタイプ</footer>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const toggle = document.querySelector(".menu-toggle");
+  const navUL = document.querySelector("nav ul");
+  toggle.addEventListener("click",()=>{navUL.style.display=(navUL.style.display==="block")?"none":"block";});
+});
+</script>
+</body>
+</html>
